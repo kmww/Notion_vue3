@@ -1,9 +1,29 @@
 <template>
   <li>
     <div class="title" :style="{ paddingLeft: `${14 * depth}px` }">
-      {{ workspace.title }}
+      <span
+        :class="{ active: showChildren }"
+        class="material-icons"
+        @click="showChildren = !showChildren"
+      >
+        play_arrow
+      </span>
+      <span class="text">
+        {{ workspace.title || "제목 없음" }}
+      </span>
+      <div class="actions">
+        <span class="material-icons"> add </span>
+        <span class="material-icons"> delete </span>
+      </div>
     </div>
-    <ul v-if="hasChildren">
+    <div
+      v-if="!hasChildren && showChildren"
+      class="no-children"
+      :style="{ paddingLeft: `${14 * depth + 22}px` }"
+    >
+      하위 페이지가 없습니다.
+    </div>
+    <ul v-if="hasChildren && showChildren">
       <WorkspaceItem
         v-for="ws in workspace.documents"
         :key="ws.id"
@@ -26,6 +46,11 @@ export default {
       default: 1,
     },
   },
+  data() {
+    return {
+      showChildren: false,
+    };
+  },
   computed: {
     hasChildren() {
       return this.workspace.documents && this.workspace.documents.length;
@@ -33,3 +58,52 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+li {
+  .title {
+    display: flex;
+    align-items: center;
+    height: 30px;
+    padding: 0 14px;
+    color: rgba($color-font, 0.7);
+    &:hover {
+      background: $color-background--hover1;
+      padding-right: 4px;
+      .actions {
+        display: flex;
+      }
+    }
+    .material-icons {
+      font-size: 18px;
+      color: $color-icon;
+      margin-right: 4px;
+      &:hover {
+        background: $color-background--hover2;
+      }
+      &.active {
+        transform: rotate(90deg);
+      }
+    }
+    .text {
+      flex-grow: 1;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .actions {
+      display: none;
+      align-items: center;
+    }
+  }
+  .no-children {
+    color: rgba($color-font, 0.35);
+    height: 30px;
+    display: flex;
+    align-items: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
+</style>
