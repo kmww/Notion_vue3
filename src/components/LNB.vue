@@ -4,10 +4,34 @@
       <div class="user-profile"></div>
       Minwoo's Notion
     </div>
-    <ul></ul>
+    <ul>
+      <WorkspaceItem
+        v-for="workspace in workspaces"
+        :key="workspace.id"
+        :workspace="workspace"
+      />
+    </ul>
     <div class="actions"></div>
   </nav>
 </template>
+
+<script>
+import WorkspaceItem from "~/components/WorkspaceItem";
+
+export default {
+  components: {
+    WorkspaceItem,
+  },
+  computed: {
+    workspaces() {
+      return this.$store.state.workspace.workspaces;
+    },
+  },
+  created() {
+    this.$store.dispatch("workspace/readWorkspaces");
+  },
+};
+</script>
 
 <style lang="scss" scoped>
 nav {
