@@ -11,13 +11,12 @@
 </template>
 
 <style lang="scss" scoped>
-* {
-  border: 4px solid;
-  box-sizing: border-box;
-}
 .app__inner {
   display: flex;
   height: 100vh;
+  font-size: 14px;
+  line-height: 1.4;
+  font-family: "Noto Sans KR", sans-serif;
   .app__nav {
     width: 240px;
     height: 100%;
