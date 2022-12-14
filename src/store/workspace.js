@@ -13,7 +13,7 @@ export default {
     },
   },
   actions: {
-    async createWorkspace(context, payload = {}) {
+    async createWorkspace({ dispatch }, payload = {}) {
       const { parentId } = payload;
       await fetch(process.env.API_KEY, {
         method: "POST",
@@ -26,6 +26,7 @@ export default {
           parent: parentId,
         }),
       }).then((res) => res.json());
+      await dispatch("readWorkspaces");
     },
     async readWorkspaces({ commit }) {
       const workspaces = await fetch(process.env.API_KEY, {
@@ -41,7 +42,7 @@ export default {
     },
     readWorkspace() {},
     updateWorkspace() {},
-    async deleteWorkspace(context, payload) {
+    async deleteWorkspace({ dispatch }, payload) {
       const { id } = payload;
       await fetch(`${process.env.API_KEY}${id}`, {
         method: "DELETE",
@@ -50,6 +51,7 @@ export default {
           "x-username": process.env.USERNAME,
         },
       }).then((res) => res.json());
+      dispatch("readWorkspaces");
     },
   },
 };

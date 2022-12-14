@@ -57,10 +57,11 @@ export default {
     },
   },
   methods: {
-    createWorkspace() {
-      this.$store.dispatch("workspace/createWorkspace", {
+    async createWorkspace() {
+      await this.$store.dispatch("workspace/createWorkspace", {
         parentId: this.workspace.id,
       });
+      this.showChildren = true;
     },
     deleteWorkspace() {
       this.$store.dispatch("workspace/deleteWorkspace", {
