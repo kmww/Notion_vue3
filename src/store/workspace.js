@@ -60,7 +60,7 @@ export default {
     },
     async updateWorkspace({ dispatch }, payload) {
       const { id, title, content } = payload;
-      await fetch({
+      await _request({
         id,
         method: "PUT",
         body: JSON.stringify({
@@ -73,6 +73,7 @@ export default {
     async deleteWorkspace({ state, dispatch }, payload) {
       const { id } = payload;
       await _request({
+        id,
         method: "DELETE",
       });
       await dispatch("readWorkspaces");
