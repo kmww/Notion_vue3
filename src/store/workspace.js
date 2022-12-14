@@ -111,12 +111,8 @@ export default {
 };
 
 async function _request(options) {
-  const { id = "" } = options;
-  return await fetch(`${process.env.API_KEY}${id}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      "x-username": process.env.USERNAME,
-    },
+  return await fetch("/.netlify/functions/workspace", {
+    method: "POST",
+    body: JSON.stringify(options),
   }).then((res) => res.json());
 }

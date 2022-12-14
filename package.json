@@ -17,6 +17,7 @@
     "css-loader": "^6.7.2",
     "dotenv-webpack": "^8.0.1",
     "html-webpack-plugin": "^5.5.0",
+    "netlify-cli": "^12.2.10",
     "sass": "^1.56.1",
     "sass-loader": "^13.2.0",
     "vue-loader": "^17.0.1",
