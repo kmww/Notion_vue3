@@ -18,17 +18,13 @@ export default {
   actions: {
     async createWorkspace({ dispatch }, payload = {}) {
       const { parentId } = payload;
-      const workspace = await fetch(process.env.API_KEY, {
+      const workspace = await _request({
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-username": process.env.USERNAME,
-        },
         body: JSON.stringify({
           title: "",
           parent: parentId,
         }),
-      }).then((res) => res.json());
+      });
       await dispatch("readWorkspaces");
       router.push({
         name: "Workspace",
@@ -38,13 +34,9 @@ export default {
       });
     },
     async readWorkspaces({ commit, dispatch }) {
-      const workspaces = await fetch(process.env.API_KEY, {
+      const workspaces = await _request({
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "x-username": process.env.USERNAME,
-        },
-      }).then((res) => res.json());
+      });
       commit("assignState", {
         workspaces,
       });
@@ -55,13 +47,10 @@ export default {
     async readWorkspace({ commit }, payload) {
       const { id } = payload;
       try {
-        const workspace = await fetch(`${process.env.API_KEY}${id}`, {
+        const workspace = await _request({
+          id,
           method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "x-username": process.env.USERNAME,
-          },
-        }).then((res) => res.json());
+        });
         commit("assignState", {
           currentWorkspace: workspace,
         });
@@ -71,28 +60,21 @@ export default {
     },
     async updateWorkspace({ dispatch }, payload) {
       const { id, title, content } = payload;
-      await fetch(`${process.env.API_KEY}${id}`, {
+      await fetch({
+        id,
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "x-username": process.env.USERNAME,
-        },
         body: JSON.stringify({
           title,
           content,
         }),
-      }).then((res) => res.json());
+      });
       dispatch("readWorkspaces");
     },
     async deleteWorkspace({ state, dispatch }, payload) {
       const { id } = payload;
-      await fetch(`${process.env.API_KEY}${id}`, {
+      await _request({
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          "x-username": process.env.USERNAME,
-        },
-      }).then((res) => res.json());
+      });
       await dispatch("readWorkspaces");
       if (id === parseInt(router.currentRoute.value.params.id, 10)) {
         router.push({
@@ -105,3 +87,14 @@ export default {
     },
   },
 };
+
+async function _request(options) {
+  const { id = "" } = options;
+  return await fetch(`${process.env.API_KEY}${id}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      "x-username": process.env.USERNAME,
+    },
+  }).then((res) => res.json());
+}
