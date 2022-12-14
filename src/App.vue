@@ -13,10 +13,10 @@
 
 <script>
 import LNB from "~/components/LNB";
-import HEADER from "~/components/HEADER";
+import Header from "~/components/Header";
 
 export default {
-  components: { LNB, HEADER },
+  components: { LNB, Header },
 };
 </script>
 
