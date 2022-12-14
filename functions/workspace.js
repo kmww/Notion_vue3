@@ -1,14 +1,16 @@
+require("dotenv").config();
 const axios = require("axios");
+const { API_KEY, USERNAME } = process.env;
 
 exports.handler = async function (event) {
   const options = JSON.parse(event.body);
   const { id = "", method, body } = options;
   const { data } = await axios({
-    url: `${process.env.API_KEY}${id}`,
+    url: `${API_KEY}${id}`,
     method,
     headers: {
       "Content-Type": "application/json",
-      "x-username": process.env.USERNAME,
+      "x-username": USERNAME,
     },
     data: body,
   });
