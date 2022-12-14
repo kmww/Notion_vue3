@@ -1,5 +1,5 @@
 <template>
-  <nav>
+  <nav ref="nav" :style="{ width: `${navWidth}px` }">
     <div class="header">
       <div class="user-profile"></div>
       Minwoo's Notion
@@ -16,15 +16,26 @@
         <span class="material-icons"> add </span> 새로운 페이지
       </div>
     </div>
+    <div
+      ref="resizeHandle"
+      class="resize-handle"
+      @dblclick="navWidth = 240"
+    ></div>
   </nav>
 </template>
 
 <script>
+import interact from "interactjs";
 import WorkspaceItem from "~/components/WorkspaceItem";
 
 export default {
   components: {
     WorkspaceItem,
+  },
+  data() {
+    return {
+      navWidth: 240,
+    };
   },
   computed: {
     workspaces() {
@@ -34,16 +45,35 @@ export default {
   created() {
     this.$store.dispatch("workspace/readWorkspaces");
   },
+  mounted() {
+    this.navInit();
+  },
+  methods: {
+    navInit() {
+      interact(this.$refs.nav)
+        .resizable({
+          edges: {
+            right: this.$refs.resizeHandle,
+          },
+        })
+        .on("resizemove", (e) => {
+          this.navWidth = e.rect.width;
+        });
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 nav {
-  width: 240px;
+  max-width: 500px;
+  min-width: 160px;
+  flex-shrink: 0;
   height: 100%;
   background-color: $color-background;
   display: flex;
   flex-direction: column;
+  position: relative;
   .header {
     padding: 14px;
     font-weight: 700;
@@ -61,7 +91,7 @@ nav {
   ul {
     flex-grow: 1;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
   .actions {
     border-top: 1px solid $color-border;
@@ -79,6 +109,18 @@ nav {
         margin-right: 4px;
         color: $color-icon;
       }
+    }
+  }
+  .resize-handle {
+    width: 4px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: col-resize;
+    transition: 0.4s;
+    &:hover {
+      background-color: $color-border;
     }
   }
 }
