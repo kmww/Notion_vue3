@@ -1,6 +1,26 @@
 <template>
   <header>
-    <div class="titles"></div>
+    <div class="titles">
+      <template
+        v-for="(workspace, idx) in $store.state.workspace.currentWorkspacePath"
+        :key="workspace.id"
+      >
+        <div v-if="idx > 0" class="division">/</div>
+        <button
+          class="title"
+          @click="
+            $router.push({
+              name: 'Workspace',
+              params: {
+                id: workspace.id,
+              },
+            })
+          "
+        >
+          {{ workspace.title || "제목 없음" }}
+        </button>
+      </template>
+    </div>
     <div class="actions">
       <button>공유</button>
       <button>업데이트</button>
@@ -17,8 +37,19 @@ header {
   align-items: center;
   padding: 0 20px;
   .titles {
-    border: 1px solid;
     flex-grow: 1;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    .division {
+      margin: 0 2px;
+      color: rgba($color-font, 0.4);
+    }
+    .title {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
   }
   .actions {
     flex-shrink: 0;
