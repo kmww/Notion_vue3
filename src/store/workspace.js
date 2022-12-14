@@ -77,7 +77,7 @@ export default {
       }).then((res) => res.json());
       dispatch("readWorkspaces");
     },
-    async deleteWorkspace({ dispatch }, payload) {
+    async deleteWorkspace({ state, dispatch }, payload) {
       const { id } = payload;
       await fetch(`${process.env.API_KEY}${id}`, {
         method: "DELETE",
@@ -86,7 +86,15 @@ export default {
           "x-username": process.env.USERNAME,
         },
       }).then((res) => res.json());
-      dispatch("readWorkspaces");
+      await dispatch("readWorkspaces");
+      if (id === parseInt(router.currentRoute.value.params.id, 10)) {
+        router.push({
+          name: "Workspace",
+          params: {
+            id: state.workspaces[0].id,
+          },
+        });
+      }
     },
   },
 };
