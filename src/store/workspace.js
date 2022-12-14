@@ -3,6 +3,7 @@ export default {
   state() {
     return {
       workspaces: [],
+      currentWorkspace: {},
     };
   },
   mutations: {
@@ -40,8 +41,33 @@ export default {
         workspaces,
       });
     },
-    readWorkspace() {},
-    updateWorkspace() {},
+    async readWorkspace({ commit }, payload) {
+      const { id } = payload;
+      const workspace = await fetch(`${process.env.API_KEY}${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-username": process.env.USERNAME,
+        },
+      }).then((res) => res.json());
+      commit("assignState", {
+        currentWorkspace: workspace,
+      });
+    },
+    async updateWorkspace(context, payload) {
+      const { id, title, content } = payload;
+      await fetch(`${process.env.API_KEY}${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "x-username": process.env.USERNAME,
+        },
+        body: JSON.stringify({
+          title,
+          content,
+        }),
+      }).then((res) => res.json());
+    },
     async deleteWorkspace({ dispatch }, payload) {
       const { id } = payload;
       await fetch(`${process.env.API_KEY}${id}`, {

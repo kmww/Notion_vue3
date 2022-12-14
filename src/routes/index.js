@@ -1,12 +1,20 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "./Home";
+import Workspace from "./Workspace";
 
 export default createRouter({
   history: createWebHistory(),
+  scrollBehavior: () => ({ top: 0 }),
   routes: [
     {
       path: "/",
-      component: Home,
+      component: Workspace,
+      children: [
+        {
+          name: "Workspace",
+          path: "workspaces/:id",
+          component: Workspace,
+        },
+      ],
     },
   ],
 });
