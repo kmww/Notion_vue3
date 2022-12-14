@@ -37,7 +37,7 @@ export default {
         },
       });
     },
-    async readWorkspaces({ commit }) {
+    async readWorkspaces({ commit, dispatch }) {
       const workspaces = await fetch(process.env.API_KEY, {
         method: "GET",
         headers: {
@@ -48,6 +48,9 @@ export default {
       commit("assignState", {
         workspaces,
       });
+      if (!workspaces.length) {
+        dispatch("createWorkspace");
+      }
     },
     async readWorkspace({ commit }, payload) {
       const { id } = payload;
