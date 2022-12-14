@@ -70,6 +70,13 @@ export default {
       return this.workspace.documents && this.workspace.documents.length;
     },
   },
+  created() {
+    this.showChildren = this.$store.state.workspace.currentWorkspacePath.some(
+      (workspace) => {
+        return workspace.id === this.workspace.id;
+      }
+    );
+  },
   methods: {
     async createWorkspace() {
       await this.$store.dispatch("workspace/createWorkspace", {
