@@ -1,3 +1,5 @@
+import router from "~/routes";
+
 export default {
   namespaced: true,
   state() {
@@ -16,7 +18,7 @@ export default {
   actions: {
     async createWorkspace({ dispatch }, payload = {}) {
       const { parentId } = payload;
-      await fetch(process.env.API_KEY, {
+      const workspace = await fetch(process.env.API_KEY, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -28,6 +30,12 @@ export default {
         }),
       }).then((res) => res.json());
       await dispatch("readWorkspaces");
+      router.push({
+        name: "Workspace",
+        params: {
+          id: workspace.id,
+        },
+      });
     },
     async readWorkspaces({ commit }) {
       const workspaces = await fetch(process.env.API_KEY, {
@@ -54,7 +62,7 @@ export default {
         currentWorkspace: workspace,
       });
     },
-    async updateWorkspace(context, payload) {
+    async updateWorkspace({ dispatch }, payload) {
       const { id, title, content } = payload;
       await fetch(`${process.env.API_KEY}${id}`, {
         method: "PUT",
@@ -67,6 +75,7 @@ export default {
           content,
         }),
       }).then((res) => res.json());
+      dispatch("readWorkspaces");
     },
     async deleteWorkspace({ dispatch }, payload) {
       const { id } = payload;
