@@ -54,16 +54,20 @@ export default {
     },
     async readWorkspace({ commit }, payload) {
       const { id } = payload;
-      const workspace = await fetch(`${process.env.API_KEY}${id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "x-username": process.env.USERNAME,
-        },
-      }).then((res) => res.json());
-      commit("assignState", {
-        currentWorkspace: workspace,
-      });
+      try {
+        const workspace = await fetch(`${process.env.API_KEY}${id}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-username": process.env.USERNAME,
+          },
+        }).then((res) => res.json());
+        commit("assignState", {
+          currentWorkspace: workspace,
+        });
+      } catch (error) {
+        router.push("/error");
+      }
     },
     async updateWorkspace({ dispatch }, payload) {
       const { id, title, content } = payload;
