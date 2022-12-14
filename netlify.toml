@@ -1,0 +1,12 @@
+[build]
+  command = "npm run build"
+  functions = "functions"
+  publish = "dist"
+
+[dev]
+  framwork = "#custom"
+  command = "npm run dev"
+  targetPort = 8080
+  port = 5000
+  publish = "dist"
+  autoLaunch = false
